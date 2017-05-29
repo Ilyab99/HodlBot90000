@@ -36,6 +36,11 @@ reqhashrate = requests.get(lastreported, headers=hdr)
 reqprice = requests.get(priceusd, headers=hdr)
 iteration = 0
 while True:
+    req = requests.get(final_site, headers=hdr)
+
+    reqbal = requests.get(balance_nano, headers=hdr)
+    reqhashrate = requests.get(lastreported, headers=hdr)
+    reqprice = requests.get(priceusd, headers=hdr)
    # page = urllib2.urlopen(req)
     jsondata = req.json()
 #    content = page.read()
