@@ -1,6 +1,6 @@
 import I2C_LCD_driver
 from time import *
-from coinmarketcap import Market
+#from coinmarketcap import Market
 import time
 
 # from fromurl.py
@@ -22,9 +22,9 @@ hdr = {
 
 lastreported = "https://api.nanopool.org/v1/eth/reportedhashrate/" + eth_adress
 balance_nano = "https://api.nanopool.org/v1/eth/balance/" + eth_adress
-
-coinmarketcap = Market()
-price = coinmarketcap.ticker('Ethereum')
+priceusd = "https://api.coinmarketcap.com/v1/ticker/ethereum/"
+#coinmarketcap = Market()
+#price = coinmarketcap.ticker('Ethereum')
 
 mylcd = I2C_LCD_driver.lcd()
 # mylcd.lcd_display_string("HODL BOT 69000", 2)
@@ -33,6 +33,7 @@ req = requests.get(final_site, headers=hdr)
 
 reqbal = requests.get(balance_nano, headers=hdr)
 reqhashrate = requests.get(lastreported, headers=hdr)
+reqprice = requests.get(priceusd, headers=hdr)
 iteration = 0
 while True:
    # page = urllib2.urlopen(req)
@@ -50,18 +51,17 @@ while True:
   #  contentbal = pagebal.read()
     jsondatabal = reqhashrate.json()
    # time.sleep(0.1)
+    jsondatapriceusd = reqprice.json()
 
 
 
 
 
-
-    price = coinmarketcap.ticker('Ethereum')
+   # price = coinmarketcap.ticker('Ethereum')
     #	time.sleep(0.500)
-    price = str(int(round(float(price[price.find('price_usd') + 13:price.find('price_btc') - 13]))))
-    final_price = str(price) + " " + str(
-        round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals)) + " " + str(
-        round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals) * float(price))
+   # price = str(int(round(float(price[price.find('price_usd') + 13:price.find('price_btc') - 13]))))
+    price = round((float(jsondatapriceusd[0]['price_usd'])),1)
+    final_price = str(price) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals)) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals) * float(price))
     nanostats = str(round(float(jsondatahash['data']),2)) + " " + str(round(float(jsondatabal['data']), 2))
     print(final_price)
     print(nanostats)
