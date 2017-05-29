@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import I2C_LCD_driver
 from time import *
 from coinmarketcap import Market
@@ -6,7 +7,7 @@ import time
 #from fromurl.py
 import urllib2,cookielib
 import json
-eth_adress = "0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF"
+eth_adress = "" #your ethereum address goes here
 site = "https://etherchain.org/api/account/"
 decimals = 2
 final_site = site + eth_adress
