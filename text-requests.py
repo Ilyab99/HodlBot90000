@@ -6,7 +6,7 @@ import time
 # from fromurl.py
 import urllib2, cookielib,requests
 import json
-
+from requests.exceptions import ConnectionError
 eth_adress = "0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF"  # your ethereum address goes here
 site = "https://etherchain.org/api/account/"
 decimals = 2
@@ -36,11 +36,31 @@ reqhashrate = requests.get(lastreported, headers=hdr)
 reqprice = requests.get(priceusd, headers=hdr)
 iteration = 0
 while True:
-    req = requests.get(final_site, headers=hdr)
 
-    reqbal = requests.get(balance_nano, headers=hdr)
-    reqhashrate = requests.get(lastreported, headers=hdr)
-    reqprice = requests.get(priceusd, headers=hdr)
+    try:
+        req = requests.get(final_site, headers=hdr)
+    except requests.exceptions.ConnectionError as e:  # This is the correct syntax
+        print e
+        req = "No response"
+
+    try:
+
+        reqprice = requests.get(balance_nano, headers=hdr)
+    except requests.exceptions.ConnectionError as e:  # This is the correct syntax
+        print e
+        reqprice = "No response"
+
+    try:
+        reqprice = requests.get(lastreported, headers=hdr)
+    except requests.exceptions.ConnectionError as e:  # This is the correct syntax
+        print e
+        reqprice = "No response"
+
+    try:
+        reqprice = requests.get(priceusd, headers=hdr)
+    except requests.exceptions.ConnectionError as e:  # This is the correct syntax
+        print e
+        reqprice = "No response"
    # page = urllib2.urlopen(req)
     jsondata = req.json()
 #    content = page.read()
@@ -74,5 +94,5 @@ while True:
     print(iteration)
     mylcd.lcd_display_string(final_price, 1)
     mylcd.lcd_display_string(nanostats, 2)
-  #  time.sleep(0.800)
+    time.sleep(10)
 
