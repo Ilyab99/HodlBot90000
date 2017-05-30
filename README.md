@@ -10,3 +10,8 @@ code for both version also contains code to display nanopool statistics on the s
 needs to be an option/version to disable it that needs to go on a todo list that doesn't exist 
 
 my ethereum address 0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF just in case :)
+
+wiring diagram;
+
+
+![Wiring diagram](http://i.imgur.com/LNU3FjX.png)
