@@ -1,5 +1,3 @@
-
-
 # _   _ ___________ _    ______ _____ _____ _____ _____ _____ _____ _____ 
 #| | | |  _  |  _  \ |   | ___ \  _  |_   _|  _  |  _  |  _  |  _  |  _  |
 #| |_| | | | | | | | |   | |_/ / | | | | | | |_| | |/' | |/' | |/' | |/' |
@@ -20,7 +18,7 @@ from requests.exceptions import ConnectionError
 eth_address = ""  # your ethereum address goes here
 site = "https://etherchain.org/api/account/"
 decimals = 2
-final_site = site + eth_adress
+final_site = site + eth_address
 
 hdr = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
@@ -30,8 +28,8 @@ hdr = {
     'Accept-Language': 'en-US,en;q=0.8',
     'Connection': 'keep-alive'}
 
-lastreported = "https://api.nanopool.org/v1/eth/reportedhashrate/" + eth_adress
-balance_nano = "https://api.nanopool.org/v1/eth/balance/" + eth_adress
+lastreported = "https://api.nanopool.org/v1/eth/reportedhashrate/" + eth_address
+balance_nano = "https://api.nanopool.org/v1/eth/balance/" + eth_address
 priceusd = "https://api.coinmarketcap.com/v1/ticker/ethereum/"
 mylcd = I2C_LCD_driver.lcd()
 req = requests.get(final_site, headers=hdr)
@@ -46,29 +44,46 @@ while True:
     except requests.exceptions.ConnectionError as e:   
         print e
         req = "No response"
+    if type(req) == str:
+	    req = requests.get(final_site, headers=hdr)
 
     try:
-
-        reqprice = requests.get(balance_nano, headers=hdr)
+        reqbal = requests.get(balance_nano, headers=hdr)
     except requests.exceptions.ConnectionError as e: 			#nanopool stuff 
         print e
-        reqprice = "No response"
+        reqbal = "No response"
+    if type(reqbal) == str:
+	    reqbal = requests.get(balance_nano, headers=hdr)
+
+
+
 
     try:
-        reqprice = requests.get(lastreported, headers=hdr)
+        reqhashrate = requests.get(lastreported, headers=hdr)
     except requests.exceptions.ConnectionError as e:       #hashrate for nanopool leave it and if you don't mine it will show nothing on the second row of the LCD or show 0's
         print e
-        reqprice = "No response"
+        reqhashrate = "No response"
+
+    if type(reqhashrate) == str:
+        reqhashrate = requests.get(lastreported, headers=hdr)
+
 
     try:
         reqprice = requests.get(priceusd, headers=hdr)
     except requests.exceptions.ConnectionError as e:  
         print e
         reqprice = "No response"
+    if type(reqprice) == str:
+        reqprice = requests.get(priceusd, headers=hdr)
+
     jsondata = req.json()
+    print(jsondata)
     jsondatahash = reqbal.json()
+    print(jsondatahash)
     jsondatabal = reqhashrate.json()
+    print(jsondatabal)
     jsondatapriceusd = reqprice.json()
+    print(jsondatapriceusd)
     price = round((float(jsondatapriceusd[0]['price_usd'])),1)
     final_price = str(price) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals)) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals) * float(price))
     nanostats = str(round(float(jsondatahash['data']),2)) + " " + str(round(float(jsondatabal['data']), 2))
@@ -79,4 +94,5 @@ while True:
     mylcd.lcd_display_string(final_price, 1)
     mylcd.lcd_display_string(nanostats, 2)
     time.sleep(10)
+
 
