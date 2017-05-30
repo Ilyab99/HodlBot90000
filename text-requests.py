@@ -1,13 +1,23 @@
+
+
+# _   _ ___________ _    ______ _____ _____ _____ _____ _____ _____ _____ 
+#| | | |  _  |  _  \ |   | ___ \  _  |_   _|  _  |  _  |  _  |  _  |  _  |
+#| |_| | | | | | | | |   | |_/ / | | | | | | |_| | |/' | |/' | |/' | |/' |
+#|  _  | | | | | | | |   | ___ \ | | | | | \____ |  /| |  /| |  /| |  /| |
+#| | | \ \_/ / |/ /| |___| |_/ | \_/ / | | .___/ | |_/ | |_/ | |_/ | |_/ /
+#\_| |_/\___/|___/ \_____|____/ \___/  \_/ \____/ \___/ \___/ \___/ \___/ 
+                                                                         
+#I2C_LCD_driver.py is needed https://gist.github.com/vay3t/8b0577acfdb27a78101ed16dd78ecba1
+#put it in the same folder                                                                        
+#add your ethereum address to eth_adress
+#donate to 0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF or not , I'll live
 import I2C_LCD_driver
 from time import *
-#from coinmarketcap import Market
 import time
-
-# from fromurl.py
-import urllib2, cookielib,requests
+import requests
 import json
 from requests.exceptions import ConnectionError
-eth_adress = "0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF"  # your ethereum address goes here
+eth_address = ""  # your ethereum address goes here
 site = "https://etherchain.org/api/account/"
 decimals = 2
 final_site = site + eth_adress
@@ -23,14 +33,8 @@ hdr = {
 lastreported = "https://api.nanopool.org/v1/eth/reportedhashrate/" + eth_adress
 balance_nano = "https://api.nanopool.org/v1/eth/balance/" + eth_adress
 priceusd = "https://api.coinmarketcap.com/v1/ticker/ethereum/"
-#coinmarketcap = Market()
-#price = coinmarketcap.ticker('Ethereum')
-
 mylcd = I2C_LCD_driver.lcd()
-# mylcd.lcd_display_string("HODL BOT 69000", 2)
-# mylcd.lcd_display_string("HODL BOT 69000", 2)
 req = requests.get(final_site, headers=hdr)
-
 reqbal = requests.get(balance_nano, headers=hdr)
 reqhashrate = requests.get(lastreported, headers=hdr)
 reqprice = requests.get(priceusd, headers=hdr)
@@ -39,52 +43,32 @@ while True:
 
     try:
         req = requests.get(final_site, headers=hdr)
-    except requests.exceptions.ConnectionError as e:  # This is the correct syntax
+    except requests.exceptions.ConnectionError as e:   
         print e
         req = "No response"
 
     try:
 
         reqprice = requests.get(balance_nano, headers=hdr)
-    except requests.exceptions.ConnectionError as e:  # This is the correct syntax
+    except requests.exceptions.ConnectionError as e: 			#nanopool stuff 
         print e
         reqprice = "No response"
 
     try:
         reqprice = requests.get(lastreported, headers=hdr)
-    except requests.exceptions.ConnectionError as e:  # This is the correct syntax
+    except requests.exceptions.ConnectionError as e:       #hashrate for nanopool leave it and if you don't mine it will show nothing on the second row of the LCD or show 0's
         print e
         reqprice = "No response"
 
     try:
         reqprice = requests.get(priceusd, headers=hdr)
-    except requests.exceptions.ConnectionError as e:  # This is the correct syntax
+    except requests.exceptions.ConnectionError as e:  
         print e
         reqprice = "No response"
-   # page = urllib2.urlopen(req)
     jsondata = req.json()
-#    content = page.read()
- #   jsondata = json.loads(content)
-  #  time.sleep(0.1)
-
-    #pagehash = urllib2.urlopen(reqhashrate)
-   # contenthash = pagehash.read()
     jsondatahash = reqbal.json()
-  #  time.sleep(0.1)
-
-   # pagebal = urllib2.urlopen(reqbal)
-  #  contentbal = pagebal.read()
     jsondatabal = reqhashrate.json()
-   # time.sleep(0.1)
     jsondatapriceusd = reqprice.json()
-
-
-
-
-
-   # price = coinmarketcap.ticker('Ethereum')
-    #	time.sleep(0.500)
-   # price = str(int(round(float(price[price.find('price_usd') + 13:price.find('price_btc') - 13]))))
     price = round((float(jsondatapriceusd[0]['price_usd'])),1)
     final_price = str(price) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals)) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals) * float(price))
     nanostats = str(round(float(jsondatahash['data']),2)) + " " + str(round(float(jsondatabal['data']), 2))

@@ -1,3 +1,18 @@
+# _   _ ___________ _    ______ _____ _____ _____ _____ _____ _____ _____ 
+#| | | |  _  |  _  \ |   | ___ \  _  |_   _|  _  |  _  |  _  |  _  |  _  |
+#| |_| | | | | | | | |   | |_/ / | | | | | | |_| | |/' | |/' | |/' | |/' |
+#|  _  | | | | | | | |   | ___ \ | | | | | \____ |  /| |  /| |  /| |  /| |
+#| | | \ \_/ / |/ /| |___| |_/ | \_/ / | | .___/ | |_/ | |_/ | |_/ | |_/ /
+#\_| |_/\___/|___/ \_____|____/ \___/  \_/ \____/ \___/ \___/ \___/ \___/ 
+                                                                         
+                                                                         
+
+
+#donate to 0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF or not ill live
+# I2C_LCD_driver.py is needed 
+
+
+
 import I2C_LCD_driver
 from time import *
 from coinmarketcap import Market
@@ -7,7 +22,7 @@ import time
 import urllib2, cookielib
 import json
 
-eth_adress = "0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF"  # your ethereum address goes here
+eth_adress = ""  # your ethereum address goes here
 site = "https://etherchain.org/api/account/"
 decimals = 2
 final_site = site + eth_adress
