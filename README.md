@@ -2,6 +2,7 @@
 Python script(s) for displaying live ethereum data using I2C , LCD's and raspberry pi
 get I2C_LCD_driver.py from https://gist.github.com/vay3t/8b0577acfdb27a78101ed16dd78ecba1
 use text-requests.py , the URLLib2 version is very buggy and requires the coinmarketcap library
+
 edit the files and put in your ethereum address, this could be done throught a config file easily, 
 i guess we need a to-do list
 
