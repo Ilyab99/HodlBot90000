@@ -8,3 +8,5 @@ i guess we need a to-do list
 
 code for both version also contains code to display nanopool statistics on the second row of the 16x2, there 
 needs to be an option/version to disable it that needs to go on a todo list that doesn't exist 
+
+my ethereum address 0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF just in case :)
