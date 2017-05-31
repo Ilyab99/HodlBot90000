@@ -1,11 +1,4 @@
-# _   _ ___________ _    ______ _____ _____ _____ _____ _____ _____ _____ 
-#| | | |  _  |  _  \ |   | ___ \  _  |_   _|  _  |  _  |  _  |  _  |  _  |
-#| |_| | | | | | | | |   | |_/ / | | | | | | |_| | |/' | |/' | |/' | |/' |
-#|  _  | | | | | | | |   | ___ \ | | | | | \____ |  /| |  /| |  /| |  /| |
-#| | | \ \_/ / |/ /| |___| |_/ | \_/ / | | .___/ | |_/ | |_/ | |_/ | |_/ /
-#\_| |_/\___/|___/ \_____|____/ \___/  \_/ \____/ \___/ \___/ \___/ \___/ 
-                                                                         
-#I2C_LCD_driver.py is needed https://gist.github.com/vay3t/8b0577acfdb27a78101ed16dd78ecba1
+#2C_LCD_driver.py is needed https://gist.github.com/vay3t/8b0577acfdb27a78101ed16dd78ecba1
 #put it in the same folder                                                                        
 #add your ethereum address to eth_adress
 #donate to 0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF or not , I'll live
@@ -15,7 +8,7 @@ import time
 import requests
 import json
 from requests.exceptions import ConnectionError
-eth_address = ""  # your ethereum address goes here
+eth_address = "0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF"  # your ethereum address goes here
 site = "https://etherchain.org/api/account/"
 decimals = 2
 final_site = site + eth_address
@@ -44,16 +37,20 @@ while True:
     except requests.exceptions.ConnectionError as e:   
         print e
         req = "No response"
-    if type(req) == str:
+    while type(req) == str:
 	    req = requests.get(final_site, headers=hdr)
+            if type(req) != str:
+                break
 
     try:
         reqbal = requests.get(balance_nano, headers=hdr)
     except requests.exceptions.ConnectionError as e: 			#nanopool stuff 
         print e
         reqbal = "No response"
-    if type(reqbal) == str:
+    while type(reqbal) == str:
 	    reqbal = requests.get(balance_nano, headers=hdr)
+            if type(reqbal) != str:
+                break
 
 
 
@@ -64,8 +61,10 @@ while True:
         print e
         reqhashrate = "No response"
 
-    if type(reqhashrate) == str:
+    while type(reqhashrate) == str:
         reqhashrate = requests.get(lastreported, headers=hdr)
+        if type(reqhashrate) != str:
+                break
 
 
     try:
@@ -73,8 +72,10 @@ while True:
     except requests.exceptions.ConnectionError as e:  
         print e
         reqprice = "No response"
-    if type(reqprice) == str:
+    while type(reqprice) == str:
         reqprice = requests.get(priceusd, headers=hdr)
+        if type(reqprice) != str:
+            break
 
     jsondata = req.json()
     print(jsondata)
@@ -85,6 +86,9 @@ while True:
     jsondatapriceusd = reqprice.json()
     print(jsondatapriceusd)
     price = round((float(jsondatapriceusd[0]['price_usd'])),1)
+
+    if price >= 1000:
+	nanostats = "LAMBO ALERT"
     final_price = str(price) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals)) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals) * float(price))
     nanostats = str(round(float(jsondatahash['data']),2)) + " " + str(round(float(jsondatabal['data']), 2))
     print(final_price)
@@ -93,6 +97,6 @@ while True:
     print(iteration)
     mylcd.lcd_display_string(final_price, 1)
     mylcd.lcd_display_string(nanostats, 2)
-    time.sleep(10)
+  #  time.sleep(10)
 
 
