@@ -8,7 +8,7 @@ import time
 import requests
 import json
 from requests.exceptions import ConnectionError
-eth_address = "0x9c64Fd2804730683F3c5401aBA7285b2f33F3eDF"  # your ethereum address goes here
+eth_address = ""  # your ethereum address goes here
 site = "https://etherchain.org/api/account/"
 decimals = 2
 final_site = site + eth_address
@@ -31,7 +31,6 @@ reqhashrate = requests.get(lastreported, headers=hdr)
 reqprice = requests.get(priceusd, headers=hdr)
 iteration = 0
 while True:
-
     try:
         req = requests.get(final_site, headers=hdr)
     except requests.exceptions.ConnectionError as e:   
@@ -41,7 +40,6 @@ while True:
 	    req = requests.get(final_site, headers=hdr)
             if type(req) != str:
                 break
-
     try:
         reqbal = requests.get(balance_nano, headers=hdr)
     except requests.exceptions.ConnectionError as e: 			#nanopool stuff 
@@ -51,10 +49,6 @@ while True:
 	    reqbal = requests.get(balance_nano, headers=hdr)
             if type(reqbal) != str:
                 break
-
-
-
-
     try:
         reqhashrate = requests.get(lastreported, headers=hdr)
     except requests.exceptions.ConnectionError as e:       #hashrate for nanopool leave it and if you don't mine it will show nothing on the second row of the LCD or show 0's
@@ -78,25 +72,17 @@ while True:
             break
 
     jsondata = req.json()
-    print(jsondata)
     jsondatahash = reqbal.json()
-    print(jsondatahash)
     jsondatabal = reqhashrate.json()
-    print(jsondatabal)
     jsondatapriceusd = reqprice.json()
-    print(jsondatapriceusd)
     price = round((float(jsondatapriceusd[0]['price_usd'])),1)
 
     if price >= 1000:
 	nanostats = "LAMBO ALERT"
     final_price = str(price) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals)) + " " + str(round((float(jsondata['data'][0]['balance']) / 1000000000000000000), decimals) * float(price))
     nanostats = str(round(float(jsondatahash['data']),2)) + " " + str(round(float(jsondatabal['data']), 2))
-    print(final_price)
-    print(nanostats)
     iteration = iteration + 1
-    print(iteration)
     mylcd.lcd_display_string(final_price, 1)
     mylcd.lcd_display_string(nanostats, 2)
-  #  time.sleep(10)
 
 
